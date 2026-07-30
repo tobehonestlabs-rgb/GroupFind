@@ -1,10 +1,7 @@
-import Link from 'next/link';
-import { fetchUserById } from '../../lib/supabase';
-
 "use client";
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function AccountPage({ searchParams }: { searchParams?: { user_id?: string } }) {
@@ -17,7 +14,7 @@ export default function AccountPage({ searchParams }: { searchParams?: { user_id
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
 
-  async function handlePublish(e: React.FormEvent) {
+  async function handlePublish(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setMessage(null);

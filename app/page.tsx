@@ -11,7 +11,7 @@ export default async function HomePage() {
       <section className="section">
         <div className="section-summary">
           <div>
-            <h1 className="section-title">GroupFind</h1>
+            <h1 className="section-title hero-title">GroupFind</h1>
             <p className="page-note">Trouvez des groupes WhatsApp par thème, ville ou intérêt en Côte d’Ivoire.</p>
           </div>
           <Link href="/about" className="button secondary">

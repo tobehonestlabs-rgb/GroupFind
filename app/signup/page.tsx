@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
@@ -12,7 +12,7 @@ export default function SignupPage() {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  async function handleSignup(e: React.FormEvent) {
+  async function handleSignup(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
