@@ -57,3 +57,16 @@ export async function insertUser(payload: any) {
   if (error) throw error;
   return data;
 }
+
+export async function createAuthUser({ email, password, noms, numero_telephone }: { email: string; password: string; noms?: string; numero_telephone?: string }) {
+  const supabase = createServerSupabase();
+  // @ts-ignore admin method
+  const { data, error } = await (supabase.auth as any).admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: { noms, numero_telephone },
+  });
+  if (error) throw error;
+  return data;
+}
