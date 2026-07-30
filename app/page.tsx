@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { categories, filterGroups, groups } from '../lib/data';
+import { categories } from '../lib/data';
+import { fetchGroups } from '../lib/supabase';
 
-export default function HomePage() {
-  const featured = groups.slice(0, 4);
+export default async function HomePage() {
+  const results = await fetchGroups({});
+  const featured = results.slice(0, 4);
 
   return (
     <main>
@@ -44,7 +46,7 @@ export default function HomePage() {
         </div>
 
         <div className="card-grid">
-          {featured.map((group) => (
+          {featured.map((group: any) => (
             <article key={group.id} className="card">
               <h3>{group.nom}</h3>
               <p>{group.description}</p>

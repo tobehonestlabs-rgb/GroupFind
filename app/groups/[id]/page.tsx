@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { getGroupById } from '../../../lib/data';
+import { fetchGroupById } from '../../../lib/supabase';
 
-export default function GroupPage({ params, searchParams }: { params: { id: string }; searchParams: { subscribed?: string } }) {
-  const group = getGroupById(params.id);
+export default async function GroupPage({ params, searchParams }: { params: { id: string }; searchParams: { subscribed?: string } }) {
+  const group = await fetchGroupById(params.id);
   const isSubscribed = searchParams.subscribed === 'true';
 
   if (!group) {
@@ -37,9 +37,9 @@ export default function GroupPage({ params, searchParams }: { params: { id: stri
             <span>Avis : {group.nombre_avis}</span>
           </div>
 
-          {group.images.length > 0 && (
+          {group.images?.length > 0 && (
             <div className="image-grid">
-              {group.images.map((image) => (
+              {group.images.map((image: string) => (
                 <img key={image} src={image} alt={group.nom} className="preview-image" />
               ))}
             </div>

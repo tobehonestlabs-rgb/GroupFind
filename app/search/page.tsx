@@ -1,10 +1,11 @@
 import Link from 'next/link';
-import { categories, filterGroups } from '../../lib/data';
+import { categories } from '../../lib/data';
+import { fetchGroups } from '../../lib/supabase';
 
-export default function SearchPage({ searchParams }: { searchParams: { q?: string; category?: string } }) {
+export default async function SearchPage({ searchParams }: { searchParams: { q?: string; category?: string } }) {
   const category = searchParams.category || 'Tous';
   const q = searchParams.q || '';
-  const results = filterGroups(q, category);
+  const results = await fetchGroups({ q, category });
 
   return (
     <main>
@@ -42,7 +43,7 @@ export default function SearchPage({ searchParams }: { searchParams: { q?: strin
       <section className="section">
         <h2 className="section-title">{results.length ? 'Groupes trouvés' : 'Aucun résultat'}</h2>
         <div className="card-grid">
-          {results.map((group) => (
+          {results.map((group: any) => (
             <article key={group.id} className="card">
               <h3>{group.nom}</h3>
               <p>{group.description}</p>

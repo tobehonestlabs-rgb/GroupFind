@@ -1,6 +1,10 @@
 import Link from 'next/link';
+import { fetchUserById } from '../../lib/supabase';
 
-export default function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams?: { user_id?: string } }) {
+  const user_id = searchParams?.user_id || '';
+  const user = user_id ? await fetchUserById(user_id) : null;
+
   return (
     <main>
       <section className="section">
@@ -17,9 +21,9 @@ export default function AccountPage() {
         </div>
 
         <div className="card-meta" style={{ marginTop: '20px' }}>
-          <span>Groupes rejoints : 4</span>
-          <span>Pass actif : non</span>
-          <span>Jour d’abonnement : -</span>
+          <span>Groupes rejoints : {user ? user.groupes_rejoins || 0 : '-'}</span>
+          <span>Pass actif : {user ? (user.abonne ? 'oui' : 'non') : '-'}</span>
+          <span>Jour d’abonnement : {user ? (user.date_dernier_abonnement ? new Date(user.date_dernier_abonnement).toLocaleDateString() : '-') : '-'}</span>
         </div>
       </section>
 
