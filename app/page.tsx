@@ -90,7 +90,6 @@ export default async function HomePage({ searchParams }: { searchParams?: { page
                   </div>
                   <p>{description}</p>
                   <div className="card-meta">
-                    <span>{group.membres_approximatifs} membres</span>
                     <span>{group.ville}</span>
                   </div>
                   <Link href={`/groups/${group.id}`} className="button secondary">

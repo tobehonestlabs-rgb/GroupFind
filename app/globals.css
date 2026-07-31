@@ -326,6 +326,47 @@ button {
   resize: vertical;
 }
 
+.category-scroll {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+}
+
+.category-chip {
+  flex: 0 0 auto;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: #f8fafc;
+  color: #334155;
+  border-radius: 999px;
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+
+.category-chip.is-selected {
+  background: rgba(77, 124, 15, 0.14);
+  border-color: rgba(77, 124, 15, 0.24);
+  color: var(--accent-strong);
+}
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+}
+
+.empty-state__card {
+  width: min(100%, 520px);
+  text-align: center;
+  padding: 32px 24px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 22px 48px rgba(15, 23, 42, 0.05);
+}
+
 .small-card {
   padding: 18px 20px;
   border-radius: 24px;

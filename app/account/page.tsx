@@ -6,12 +6,21 @@ import { useRouter } from 'next/navigation';
 import { supabaseBrowser } from '../../lib/supabase-browser';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const COMMUNITY_CATEGORIES = [
+  { label: 'Technologie', value: 'Science et Teck' },
+  { label: 'Sport', value: 'Sport' },
+  { label: 'Musique', value: 'Musique' },
+  { label: 'Business', value: 'Business' },
+  { label: 'Éducation', value: 'Éducation' },
+  { label: 'Divertissement', value: 'Divertissement' },
+  { label: 'Gaming', value: 'Gaming' },
+];
 
 export default function AccountPage() {
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [nom, setNom] = useState('');
-  const [theme, setTheme] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(COMMUNITY_CATEGORIES[0].value);
   const [description, setDescription] = useState('');
   const [ville, setVille] = useState('');
   const [lien, setLien] = useState('');
@@ -68,15 +77,15 @@ export default function AccountPage() {
     setLoading(true);
     setMessage(null);
 
-    if (!nom.trim() || !theme.trim() || !ville.trim()) {
-      setMessage('Veuillez remplir au minimum le nom, le thème et la ville.');
+    if (!nom.trim() || !selectedCategory || !ville.trim()) {
+      setMessage('Veuillez remplir au minimum le nom, la catégorie et la ville.');
       setLoading(false);
       return;
     }
 
     try {
       const formData = new FormData();
-      formData.append('categorie', theme);
+      formData.append('categorie', selectedCategory);
       formData.append('nom', nom);
       formData.append('description', description);
       formData.append('ville', ville);
@@ -85,6 +94,8 @@ export default function AccountPage() {
       formData.append('cree_par', userId || '');
       formData.append('contact_createur', '');
       formData.append('est_actif', 'true');
+      formData.append('proprietaire', userId || '');
+      formData.append('owner_id', userId || '');
 
       if (bannerFile) formData.append('banner', bannerFile);
       if (iconFile) formData.append('icon', iconFile);
@@ -97,7 +108,7 @@ export default function AccountPage() {
       if (!data.ok) throw new Error(data.error || 'Erreur');
 
       const created = data.data?.[0];
-      setMessage('Groupe publié avec succès');
+      setMessage('Communauté publiée avec succès');
       if (created?.id) router.push(`/groups/${created.id}`);
     } catch (err: any) {
       setMessage(err.message || 'Erreur');
@@ -110,35 +121,45 @@ export default function AccountPage() {
     <main>
       <section className="section">
         <h1 className="section-title">Mon compte</h1>
-        <p className="page-note">Bonjour {userName}, gérez votre espace et publiez vos groupes.</p>
+        <p className="page-note">Bonjour {userName}, gérez votre espace et publiez votre communauté.</p>
       </section>
 
       <section className="section card">
         <div className="section-summary">
           <div>
-            <h2 style={{ margin: 0 }}>Statistiques du compte</h2>
-            <p style={{ margin: '10px 0 0', color: '#475569' }}>Aperçu de votre utilisation sur GroupFind.</p>
+            <h2 style={{ margin: 0 }}>Gestion de votre communauté</h2>
+            <p style={{ margin: '10px 0 0', color: '#475569' }}>Publiez une seule communauté et gérez-la ensuite à tout moment.</p>
           </div>
-        </div>
-
-        <div className="card-meta" style={{ marginTop: '20px' }}>
-          <span>Groupes rejoints : -</span>
-          <span>Pass actif : -</span>
-          <span>Jour d’abonnement : -</span>
+          <Link href="/gerer-communauté" className="button secondary">
+            Gérer ma communauté
+          </Link>
         </div>
       </section>
 
       <section className="section input-card">
-        <h2 style={{ marginTop: 0 }}>Publier un groupe</h2>
+        <h2 style={{ marginTop: 0 }}>Publier une communauté</h2>
         <form onSubmit={handlePublish}>
           <div className="field">
-            <label htmlFor="nom">Nom du groupe</label>
-            <input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom du groupe" />
+            <label htmlFor="nom">Nom de la communauté</label>
+            <input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom de la communauté" />
           </div>
+
           <div className="field">
-            <label htmlFor="theme">Thème</label>
-            <input id="theme" value={theme} onChange={(e) => setTheme(e.target.value)} placeholder="Par exemple : Tech, Business" />
+            <label>Catégorie</label>
+            <div className="category-scroll" role="listbox" aria-label="Sélection de catégorie">
+              {COMMUNITY_CATEGORIES.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  className={`category-chip ${selectedCategory === item.value ? 'is-selected' : ''}`}
+                  onClick={() => setSelectedCategory(item.value)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </div>
+
           <div className="field">
             <label htmlFor="description">Description</label>
             <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Décrivez votre groupe et ce que les membres y trouveront." />
@@ -153,19 +174,19 @@ export default function AccountPage() {
           </div>
 
           <div className="field">
-            <label htmlFor="banner">Bannière du groupe</label>
+            <label htmlFor="banner">Bannière de la communauté</label>
             <input id="banner" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setBannerFile, setBannerPreview)} />
             {bannerPreview && <img src={bannerPreview} alt="Aperçu de la bannière" className="preview-image" />}
           </div>
 
           <div className="field">
-            <label htmlFor="icon">Icône du groupe</label>
+            <label htmlFor="icon">Icône de la communauté</label>
             <input id="icon" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setIconFile, setIconPreview)} />
             {iconPreview && <img src={iconPreview} alt="Aperçu de l’icône" className="preview-image" />}
           </div>
 
           <button type="submit" className="button" disabled={loading}>
-            {loading ? 'Publication...' : 'Publier un groupe'}
+            {loading ? 'Publication...' : 'Publier une communauté'}
           </button>
           {message && <p style={{ marginTop: 12 }}>{message}</p>}
         </form>

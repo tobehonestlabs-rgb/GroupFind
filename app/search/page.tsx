@@ -50,7 +50,6 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
               <div className="card-meta">
                 <span>{group.categorie}</span>
                 <span>{group.ville}</span>
-                <span>{group.membres_approximatifs} membres</span>
               </div>
               <div style={{ marginTop: '20px' }}>
                 <Link href={`/groups/${group.id}`} className="button secondary">

@@ -24,7 +24,7 @@ export default async function GroupPage({ params, searchParams }: { params: { id
         <div className="section-summary">
           <div>
             <h1 className="section-title">{group.nom}</h1>
-            <p className="page-note">{group.categorie} • {group.ville} • {group.membres_approximatifs} membres</p>
+            <p className="page-note">{group.categorie} • {group.ville}</p>
           </div>
           <div>
             <Link href="/search" className="button secondary">Retour aux résultats</Link>
@@ -33,11 +33,6 @@ export default async function GroupPage({ params, searchParams }: { params: { id
 
         <div className="card" style={{ padding: '28px 26px' }}>
           <p style={{ margin: 0, color: '#334155' }}>{group.description}</p>
-          <div className="card-meta" style={{ marginTop: '18px' }}>
-            <span>Notes : {group.note_moyenne} / 5</span>
-            <span>Avis : {group.nombre_avis}</span>
-          </div>
-
           {group.images?.length > 0 && (
             <div className="image-grid">
               {group.images.map((image: string) => (

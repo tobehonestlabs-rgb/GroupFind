@@ -13,13 +13,13 @@ export type Group = {
 };
 
 export const categories = [
-  'Tech',
-  'Business',
-  'Education',
-  'Lifestyle',
+  'Science et Teck',
   'Sport',
-  'Voyage',
-  'Art & Culture',
+  'Musique',
+  'Business',
+  'Éducation',
+  'Divertissement',
+  'Gaming',
 ];
 
 export const groups: Group[] = [
