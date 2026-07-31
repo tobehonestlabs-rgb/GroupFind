@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabaseBrowser } from '../../lib/supabase-browser';
 
 export default function SignupPage() {
   const [noms, setNoms] = useState('');
@@ -24,8 +25,14 @@ export default function SignupPage() {
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'Erreur');
-      const user = data.user;
-      router.push(`/account?user_id=${encodeURIComponent(user.user_id || user.user_id)}`);
+
+      const { error: signInError } = await supabaseBrowser.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInError) throw new Error(signInError.message);
+
+      router.push('/account');
     } catch (err: any) {
       setError(err.message || 'Erreur');
     } finally {

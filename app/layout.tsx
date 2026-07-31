@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import AuthHeader from '../components/AuthHeader';
 
 export const metadata: Metadata = {
   title: 'GroupFind',
@@ -23,12 +24,7 @@ export default function RootLayout({
                 <p className="brand-subtitle">Groupes WhatsApp Côte d’Ivoire</p>
               </div>
             </div>
-            <nav className="main-nav">
-              <a href="/">Accueil</a>
-              <a href="/about">À propos</a>
-              <a href="/signup">Inscription</a>
-              <a href="/account">Compte</a>
-            </nav>
+            <AuthHeader />
           </header>
           {children}
         </div>

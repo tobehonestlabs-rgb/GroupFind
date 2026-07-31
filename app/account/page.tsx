@@ -1,11 +1,13 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabaseBrowser } from '../../lib/supabase-browser';
 
-export default function AccountPage({ searchParams }: { searchParams?: { user_id?: string } }) {
-  const user_id = searchParams?.user_id || '';
+export default function AccountPage() {
+  const [userId, setUserId] = useState('');
+  const [userName, setUserName] = useState('');
   const [nom, setNom] = useState('');
   const [theme, setTheme] = useState('');
   const [ville, setVille] = useState('');
@@ -13,6 +15,18 @@ export default function AccountPage({ searchParams }: { searchParams?: { user_id
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    supabaseBrowser.auth.getSession().then((res) => {
+      const user = res.data?.session?.user;
+      if (user) {
+        setUserId(user.id);
+        setUserName(user.user_metadata?.noms || user.email || 'Utilisateur');
+      } else {
+        router.push('/signin');
+      }
+    });
+  }, [router]);
 
   async function handlePublish(e: FormEvent) {
     e.preventDefault();
@@ -27,7 +41,7 @@ export default function AccountPage({ searchParams }: { searchParams?: { user_id
         ville,
         lien_invitation: lien,
         membres_approximatifs: 0,
-        cree_par: user_id || null,
+        cree_par: userId || null,
         contact_createur: '',
       };
       const res = await fetch('/api/groups', {
@@ -52,7 +66,7 @@ export default function AccountPage({ searchParams }: { searchParams?: { user_id
     <main>
       <section className="section">
         <h1 className="section-title">Mon compte</h1>
-        <p className="page-note">Suivez vos groupes et gérez votre abonnement.</p>
+        <p className="page-note">Bonjour {userName}, gérez votre espace et publiez vos groupes.</p>
       </section>
 
       <section className="section card">
