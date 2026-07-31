@@ -23,14 +23,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: authError.message }, { status: 500 });
     }
 
-    const user_id = authData?.user?.id || authData?.id || null;
+    const user_id = authData?.user?.id ?? null;
 
     // Insert profile into utilisateurs table
     const profile = {
       user_id,
       noms,
       email,
-      mot_de_passe: mot_de_passe,
+      mot_de_passe,
       numero_telephone,
       abonne: false,
     };
