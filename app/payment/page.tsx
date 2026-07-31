@@ -54,7 +54,7 @@ export default function PaymentPage() {
           </p>
           <div className="hero-actions">
             <button className="button" onClick={handlePay} disabled={loading}>
-              {loading ? 'Préparation du paiement...' : 'Payer 99 FCFA'}
+              {loading ? 'Préparation du paiement...' : 'Seulement 99 FCFA'}
             </button>
             <a href="/" className="button secondary">
               Retour à l’accueil
@@ -63,7 +63,7 @@ export default function PaymentPage() {
         </div>
 
         <div className="card payment-card">
-          <div className="price-pill">99 FCFA</div>
+          <div className="price-pill">99 FCFA</div>git 
           <h2 style={{ margin: 0 }}>Ce que vous obtenez</h2>
           <ul className="feature-list">
             <li>Accès instantané aux liens WhatsApp</li>
