@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { categories } from '../../lib/data';
+import { categories, getGroupMedia } from '../../lib/data';
 import { fetchGroups } from '../../lib/supabase';
 
 export default async function SearchPage({ searchParams }: { searchParams: { q?: string; category?: string } }) {
@@ -43,21 +43,34 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
       <section className="section">
         <h2 className="section-title">{results.length ? 'Groupes trouvés' : 'Aucun résultat'}</h2>
         <div className="card-grid">
-          {results.map((group: any) => (
-            <article key={group.id} className="card">
-              <h3>{group.nom}</h3>
-              <p>{group.description}</p>
-              <div className="card-meta">
-                <span>{group.categorie}</span>
-                <span>{group.ville}</span>
-              </div>
-              <div style={{ marginTop: '20px' }}>
-                <Link href={`/groups/${group.id}`} className="button secondary">
-                  Voir le groupe
-                </Link>
-              </div>
-            </article>
-          ))}
+          {results.map((group: any) => {
+            const { banner, icon } = getGroupMedia(group);
+            const safeBanner = banner || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80';
+            return (
+              <article key={group.id} className="group-card">
+                <div className="group-card__media" style={{ backgroundImage: `url(${safeBanner})` }} />
+                <div className="group-card__body">
+                  <div className="group-card__top">
+                    <div className="group-card__avatar">
+                      {icon ? <img src={icon} alt={group.nom} className="group-card__icon" /> : (group.nom || 'GF').slice(0, 1).toUpperCase()}
+                    </div>
+                    <div>
+                      <h3>{group.nom}</h3>
+                      <p className="group-card__meta">{group.categorie} • {group.ville}</p>
+                    </div>
+                  </div>
+                  <p>{group.description}</p>
+                  <div className="card-meta">
+                    <span>{group.categorie}</span>
+                    <span>{group.ville}</span>
+                  </div>
+                  <Link href={`/groups/${group.id}`} className="button secondary">
+                    Voir le groupe
+                  </Link>
+                </div>
+              </article>
+            );
+          })}
         </div>
       </section>
     </main>

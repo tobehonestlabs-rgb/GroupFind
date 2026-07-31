@@ -35,15 +35,53 @@ function buildImageArray(existingImages: string[] = [], bannerFile?: File | null
 
 async function resolveImages(supabase: any, existingImages: string[] = [], bannerFile?: File | null, iconFile?: File | null) {
   const images = [...existingImages];
+  let bannerUrl = images[0] || '';
+  let iconUrl = images[1] || '';
+
   if (bannerFile instanceof File) {
-    const bannerUrl = await uploadImageFile(supabase, bannerFile, 'banners');
-    images[0] = bannerUrl;
+    bannerUrl = await uploadImageFile(supabase, bannerFile, 'banners');
   }
   if (iconFile instanceof File) {
-    const iconUrl = await uploadImageFile(supabase, iconFile, 'icons');
-    images[1] = iconUrl;
+    iconUrl = await uploadImageFile(supabase, iconFile, 'icons');
   }
+
+  if (bannerUrl) images[0] = bannerUrl;
+  if (iconUrl) images[1] = iconUrl;
   return images.filter(Boolean);
+}
+
+async function insertGroupRecord(supabase: any, tableName: string, payload: any) {
+  try {
+    const { data, error } = await supabase.from(tableName).insert(payload).select();
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    const message = error?.message || '';
+    if (message.includes('column') && message.includes('does not exist')) {
+      const { banniere, icone, ...safePayload } = payload;
+      const { data, fallbackError } = await supabase.from(tableName).insert(safePayload).select();
+      if (fallbackError) throw fallbackError;
+      return { data, error: null };
+    }
+    throw error;
+  }
+}
+
+async function updateGroupRecord(supabase: any, tableName: string, id: string, payload: any) {
+  try {
+    const { data, error } = await supabase.from(tableName).update(payload).eq('id', id).select();
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error: any) {
+    const message = error?.message || '';
+    if (message.includes('column') && message.includes('does not exist')) {
+      const { banniere, icone, ...safePayload } = payload;
+      const { data, fallbackError } = await supabase.from(tableName).update(safePayload).eq('id', id).select();
+      if (fallbackError) throw fallbackError;
+      return { data, error: null };
+    }
+    throw error;
+  }
 }
 
 async function ensureSingleCommunity(supabase: any, ownerId: string) {
@@ -90,7 +128,10 @@ export async function POST(request: Request) {
         }
       }
 
-      payload.images = await resolveImages(supabase, [], bannerFile instanceof File ? bannerFile : null, iconFile instanceof File ? iconFile : null);
+      const resolvedImages = await resolveImages(supabase, [], bannerFile instanceof File ? bannerFile : null, iconFile instanceof File ? iconFile : null);
+      payload.images = resolvedImages;
+      if (resolvedImages[0]) payload.banniere = resolvedImages[0];
+      if (resolvedImages[1]) payload.icone = resolvedImages[1];
     } else {
       payload = await request.json();
       payload.est_actif = payload.est_actif ?? true;
@@ -104,8 +145,7 @@ export async function POST(request: Request) {
       }
     }
 
-    const { data, error } = await supabase.from(TABLE_NAME).insert(payload).select();
-    if (error) throw error;
+    const { data } = await insertGroupRecord(supabase, TABLE_NAME, payload);
 
     return NextResponse.json({ ok: true, data });
   } catch (err: any) {
@@ -132,10 +172,12 @@ export async function PUT(request: Request) {
         lien_invitation: formData.get('lien_invitation')?.toString() || '',
       };
 
-      payload.images = await resolveImages(supabase, existingImages, bannerFile instanceof File ? bannerFile : null, iconFile instanceof File ? iconFile : null);
-	
-      const { data, error } = await supabase.from(TABLE_NAME).update(payload).eq('id', id).select();
-      if (error) throw error;
+      const resolvedImages = await resolveImages(supabase, existingImages, bannerFile instanceof File ? bannerFile : null, iconFile instanceof File ? iconFile : null);
+      payload.images = resolvedImages;
+      if (resolvedImages[0]) payload.banniere = resolvedImages[0];
+      if (resolvedImages[1]) payload.icone = resolvedImages[1];
+
+      const { data } = await updateGroupRecord(supabase, TABLE_NAME, id!, payload);
       return NextResponse.json({ ok: true, data });
     }
 

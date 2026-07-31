@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { categories } from '../lib/data';
+import { categories, getGroupMedia } from '../lib/data';
 import { fetchGroups } from '../lib/supabase';
 
 const PAGE_SIZE = 5;
@@ -75,14 +75,17 @@ export default async function HomePage({ searchParams }: { searchParams?: { page
 
         <div className="card-grid">
           {featured.map((group: any) => {
-            const banner = group.images?.[0] || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80';
+            const { banner, icon } = getGroupMedia(group);
             const description = group.description?.length > 120 ? `${group.description.slice(0, 120)}...` : group.description;
+            const safeBanner = banner || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80';
             return (
               <article key={group.id} className="group-card">
-                <div className="group-card__media" style={{ backgroundImage: `url(${banner})` }} />
+                <div className="group-card__media" style={{ backgroundImage: `url(${safeBanner})` }} />
                 <div className="group-card__body">
                   <div className="group-card__top">
-                    <div className="group-card__avatar">{(group.nom || 'GF').slice(0, 1).toUpperCase()}</div>
+                    <div className="group-card__avatar">
+                      {icon ? <img src={icon} alt={group.nom} className="group-card__icon" /> : (group.nom || 'GF').slice(0, 1).toUpperCase()}
+                    </div>
                     <div>
                       <h3>{group.nom}</h3>
                       <p className="group-card__meta">{group.categorie} • {group.ville}</p>

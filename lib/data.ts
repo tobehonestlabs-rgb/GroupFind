@@ -120,6 +120,13 @@ export function getGroupById(id: string): Group | undefined {
   return groups.find((group) => group.id === id);
 }
 
+export function getGroupMedia(group: any) {
+  const images = Array.isArray(group?.images) ? group.images : [];
+  const banner = group?.banniere || group?.banner || group?.banner_url || images[0] || images[1] || '';
+  const icon = group?.icone || group?.icon || group?.icon_url || images[1] || images[0] || '';
+  return { banner, icon };
+}
+
 export function filterGroups(query?: string, category?: string) {
   const normalizedQuery = query?.trim().toLowerCase();
   return groups.filter((group) => {
