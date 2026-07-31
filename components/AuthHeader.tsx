@@ -41,20 +41,29 @@ export default function AuthHeader() {
 
   return (
     <nav className="main-nav">
-      <Link href="/">Accueil</Link>
-      <Link href="/about">À propos</Link>
+      <Link href="/" className="nav-pill">
+        Accueil
+      </Link>
+      <Link href="/about" className="nav-pill">
+        À propos
+      </Link>
       {user ? (
         <>
-          <span className="nav-user">Bonjour, {user.user_metadata?.noms || user.email || 'Utilisateur'}</span>
-          <Link href="/account">Compte</Link>
-          <button type="button" className="button ghost" onClick={handleSignOut}>
+          <Link href="/account" className="nav-pill">
+            Compte
+          </Link>
+          <button type="button" className="nav-pill nav-pill--button" onClick={handleSignOut}>
             Déconnexion
           </button>
         </>
       ) : (
         <>
-          <Link href="/signup">Inscription</Link>
-          <Link href="/signin">Connexion</Link>
+          <Link href="/signin" className="nav-pill">
+            Connexion
+          </Link>
+          <Link href="/signup" className="nav-pill nav-pill--accent">
+            Inscription
+          </Link>
         </>
       )}
     </nav>

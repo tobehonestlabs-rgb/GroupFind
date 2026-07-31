@@ -26,7 +26,6 @@ export default function PaymentPage() {
         body: JSON.stringify({
           email: user.email,
           amount: 99,
-         
           userId: user.id,
         }),
       });
@@ -49,26 +48,30 @@ export default function PaymentPage() {
       <section className="section hero-panel">
         <div className="hero-copy">
           <span className="eyebrow">Accès premium • 30 jours</span>
-          <h1 className="section-title hero-title">Paye ta première fois et rejoins les groupes gratuitement pendant 30 jours</h1>
-          <p className="page-note">Accède aux liens WhatsApp en toute simplicité avec un pass de 30 jours à seulement 99 Fcfa.</p>
+          <h1 className="section-title hero-title">Débloquez l’accès premium et rejoignez les groupes sans limite pendant 30 jours.</h1>
+          <p className="page-note">
+            Un paiement unique de 99 FCFA vous donne accès aux groupes WhatsApp et à tous les liens disponibles en toute simplicité.
+          </p>
           <div className="hero-actions">
             <button className="button" onClick={handlePay} disabled={loading}>
-              {loading ? 'Préparation du paiement...' : 'Payer 99 Fcfa'}
+              {loading ? 'Préparation du paiement...' : 'Payer 99 FCFA'}
             </button>
-            <a href="/" className="button secondary">Retour à l’accueil</a>
+            <a href="/" className="button secondary">
+              Retour à l’accueil
+            </a>
           </div>
         </div>
 
         <div className="card payment-card">
-          <div className="price-pill">99 Fcfa</div>
-          <h2 style={{ margin: 0 }}>Ce que tu obtiens</h2>
+          <div className="price-pill">99 FCFA</div>
+          <h2 style={{ margin: 0 }}>Ce que vous obtenez</h2>
           <ul className="feature-list">
-            <li>Accès rapide aux liens WhatsApp</li>
-            <li>Réjoins les groupes sans limite pendant 30 jours</li>
+            <li>Accès instantané aux liens WhatsApp</li>
+            <li>30 jours d’accès premium sans limite</li>
             <li>Paiement sécurisé via Paystack</li>
           </ul>
           <p className="helper-text">
-            Le bouton ci-dessus lance le paiement sécurisé. Une fois payé, tu peux accéder à toutes les communautés disponibles.
+            Le bouton ci-dessus lance le paiement sécurisé. Une fois payé, vous pouvez accéder à toutes les communautés disponibles.
           </p>
           {error && <p className="error-text">{error}</p>}
         </div>

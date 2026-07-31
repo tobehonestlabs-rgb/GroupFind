@@ -1,17 +1,24 @@
 "use client";
 
 import Link from 'next/link';
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabaseBrowser } from '../../lib/supabase-browser';
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 export default function AccountPage() {
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [nom, setNom] = useState('');
   const [theme, setTheme] = useState('');
+  const [description, setDescription] = useState('');
   const [ville, setVille] = useState('');
   const [lien, setLien] = useState('');
+  const [bannerFile, setBannerFile] = useState<File | null>(null);
+  const [iconFile, setIconFile] = useState<File | null>(null);
+  const [bannerPreview, setBannerPreview] = useState('');
+  const [iconPreview, setIconPreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const router = useRouter();
@@ -28,32 +35,69 @@ export default function AccountPage() {
     });
   }, [router]);
 
+  useEffect(() => {
+    return () => {
+      if (bannerPreview) URL.revokeObjectURL(bannerPreview);
+      if (iconPreview) URL.revokeObjectURL(iconPreview);
+    };
+  }, [bannerPreview, iconPreview]);
+
+  function handleFileSelection(
+    event: ChangeEvent<HTMLInputElement>,
+    setter: (file: File | null) => void,
+    previewSetter: (value: string) => void,
+  ) {
+    const file = event.target.files?.[0] || null;
+    if (!file) {
+      setter(null);
+      previewSetter('');
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      setMessage('Les images doivent faire moins de 5 Mo.');
+      return;
+    }
+
+    setter(file);
+    previewSetter(URL.createObjectURL(file));
+  }
+
   async function handlePublish(e: FormEvent) {
     e.preventDefault();
     setLoading(true);
     setMessage(null);
+
+    if (!nom.trim() || !theme.trim() || !ville.trim()) {
+      setMessage('Veuillez remplir au minimum le nom, le thème et la ville.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const payload = {
-        categorie: theme,
-        nom,
-        description: '',
-        images: [],
-        ville,
-        lien_invitation: lien,
-        membres_approximatifs: 0,
-        cree_par: userId || null,
-        contact_createur: '',
-      };
+      const formData = new FormData();
+      formData.append('categorie', theme);
+      formData.append('nom', nom);
+      formData.append('description', description);
+      formData.append('ville', ville);
+      formData.append('lien_invitation', lien);
+      formData.append('membres_approximatifs', '0');
+      formData.append('cree_par', userId || '');
+      formData.append('contact_createur', '');
+      formData.append('est_actif', 'true');
+
+      if (bannerFile) formData.append('banner', bannerFile);
+      if (iconFile) formData.append('icon', iconFile);
+
       const res = await fetch('/api/groups', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       });
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || 'Erreur');
-      setMessage('Groupe publié avec succès');
-      // optionally redirect to group page if id returned
+
       const created = data.data?.[0];
+      setMessage('Groupe publié avec succès');
       if (created?.id) router.push(`/groups/${created.id}`);
     } catch (err: any) {
       setMessage(err.message || 'Erreur');
@@ -96,6 +140,10 @@ export default function AccountPage() {
             <input id="theme" value={theme} onChange={(e) => setTheme(e.target.value)} placeholder="Par exemple : Tech, Business" />
           </div>
           <div className="field">
+            <label htmlFor="description">Description</label>
+            <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Décrivez votre groupe et ce que les membres y trouveront." />
+          </div>
+          <div className="field">
             <label htmlFor="ville">Ville</label>
             <input id="ville" value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Abidjan, San Pedro..." />
           </div>
@@ -103,13 +151,28 @@ export default function AccountPage() {
             <label htmlFor="link">Lien d’invitation</label>
             <input id="link" value={lien} onChange={(e) => setLien(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
           </div>
-          <button type="submit" className="button" disabled={loading}>{loading ? 'Publication...' : 'Publier un groupe'}</button>
+
+          <div className="field">
+            <label htmlFor="banner">Bannière du groupe</label>
+            <input id="banner" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setBannerFile, setBannerPreview)} />
+            {bannerPreview && <img src={bannerPreview} alt="Aperçu de la bannière" className="preview-image" />}
+          </div>
+
+          <div className="field">
+            <label htmlFor="icon">Icône du groupe</label>
+            <input id="icon" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setIconFile, setIconPreview)} />
+            {iconPreview && <img src={iconPreview} alt="Aperçu de l’icône" className="preview-image" />}
+          </div>
+
+          <button type="submit" className="button" disabled={loading}>
+            {loading ? 'Publication...' : 'Publier un groupe'}
+          </button>
           {message && <p style={{ marginTop: 12 }}>{message}</p>}
         </form>
       </section>
 
-      <Link href="/payment" className="button" style={{ marginTop: '18px' }}>
-        Paye ta première fois
+      <Link href="/payment" className="button secondary" style={{ marginTop: '18px' }}>
+        Débloquer l’accès premium
       </Link>
     </main>
   );
