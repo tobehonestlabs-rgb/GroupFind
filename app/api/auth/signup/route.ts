@@ -19,7 +19,11 @@ export async function POST(request: Request) {
       user_metadata: { noms, numero_telephone },
     } as any);
 
+    // Debug logging for createUser
+    console.log('signup.createUser', { authData, authError });
+
     if (authError) {
+      console.error('signup.authError', authError);
       return NextResponse.json({ ok: false, error: authError.message }, { status: 500 });
     }
 
@@ -35,9 +39,14 @@ export async function POST(request: Request) {
       abonne: false,
     };
 
-    const inserted = await insertUser(profile);
-
-    return NextResponse.json({ ok: true, user: inserted?.[0] || null });
+    try {
+      const inserted = await insertUser(profile);
+      console.log('signup.insertUser', inserted);
+      return NextResponse.json({ ok: true, user: inserted?.[0] || null });
+    } catch (dbErr: any) {
+      console.error('signup.insertUser.error', dbErr);
+      return NextResponse.json({ ok: false, error: dbErr?.message || 'Database insert failed' }, { status: 500 });
+    }
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: err.message }, { status: 500 });
   }
