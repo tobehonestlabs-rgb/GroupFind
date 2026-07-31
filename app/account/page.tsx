@@ -7,7 +7,7 @@ import { supabaseBrowser } from '../../lib/supabase-browser';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const COMMUNITY_CATEGORIES = [
-  { label: 'Technologie', value: 'Science et Teck' },
+  { label: 'Science et Tech', value: 'Science et Tech' },
   { label: 'Sport', value: 'Sport' },
   { label: 'Musique', value: 'Musique' },
   { label: 'Business', value: 'Business' },
@@ -30,17 +30,24 @@ export default function AccountPage() {
   const [iconPreview, setIconPreview] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [hasCommunity, setHasCommunity] = useState(false);
+  const [communityLoading, setCommunityLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    supabaseBrowser.auth.getSession().then((res) => {
+    supabaseBrowser.auth.getSession().then(async (res) => {
       const user = res.data?.session?.user;
       if (user) {
         setUserId(user.id);
         setUserName(user.user_metadata?.noms || user.email || 'Utilisateur');
+        const { data, error } = await supabaseBrowser.from('groupes').select('id').eq('proprietaire', user.id).limit(1);
+        if (!error) {
+          setHasCommunity((data?.length || 0) > 0);
+        }
       } else {
         router.push('/signin');
       }
+      setCommunityLoading(false);
     });
   }, [router]);
 
@@ -136,61 +143,75 @@ export default function AccountPage() {
         </div>
       </section>
 
-      <section className="section input-card">
-        <h2 style={{ marginTop: 0 }}>Publier une communauté</h2>
-        <form onSubmit={handlePublish}>
-          <div className="field">
-            <label htmlFor="nom">Nom de la communauté</label>
-            <input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom de la communauté" />
-          </div>
-
-          <div className="field">
-            <label>Catégorie</label>
-            <div className="category-scroll" role="listbox" aria-label="Sélection de catégorie">
-              {COMMUNITY_CATEGORIES.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  className={`category-chip ${selectedCategory === item.value ? 'is-selected' : ''}`}
-                  onClick={() => setSelectedCategory(item.value)}
-                >
-                  {item.label}
-                </button>
-              ))}
+      {communityLoading ? (
+        <section className="section input-card">
+          <p>Chargement de votre espace…</p>
+        </section>
+      ) : hasCommunity ? (
+        <section className="section input-card">
+          <h2 style={{ marginTop: 0 }}>Gérer votre communauté</h2>
+          <p style={{ marginBottom: 16 }}>Vous avez déjà une communauté. Vous pouvez uniquement la gérer à partir de cette page.</p>
+          <Link href="/gerer-communauté" className="button">
+            Gérer ma communauté
+          </Link>
+        </section>
+      ) : (
+        <section className="section input-card">
+          <h2 style={{ marginTop: 0 }}>Publier une communauté</h2>
+          <form onSubmit={handlePublish}>
+            <div className="field">
+              <label htmlFor="nom">Nom de la communauté</label>
+              <input id="nom" value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom de la communauté" />
             </div>
-          </div>
 
-          <div className="field">
-            <label htmlFor="description">Description</label>
-            <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Décrivez votre groupe et ce que les membres y trouveront." />
-          </div>
-          <div className="field">
-            <label htmlFor="ville">Ville</label>
-            <input id="ville" value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Abidjan, San Pedro..." />
-          </div>
-          <div className="field">
-            <label htmlFor="link">Lien WhatsApp du groupe</label>
-            <input id="link" value={lien} onChange={(e) => setLien(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
-          </div>
+            <div className="field">
+              <label>Catégorie</label>
+              <div className="category-scroll" role="listbox" aria-label="Sélection de catégorie">
+                {COMMUNITY_CATEGORIES.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    className={`category-chip ${selectedCategory === item.value ? 'is-selected' : ''}`}
+                    onClick={() => setSelectedCategory(item.value)}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-          <div className="field">
-            <label htmlFor="banner">Bannière de la communauté</label>
-            <input id="banner" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setBannerFile, setBannerPreview)} />
-            {bannerPreview && <img src={bannerPreview} alt="Aperçu de la bannière" className="preview-image" />}
-          </div>
+            <div className="field">
+              <label htmlFor="description">Description</label>
+              <textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Décrivez votre groupe et ce que les membres y trouveront." />
+            </div>
+            <div className="field">
+              <label htmlFor="ville">Ville</label>
+              <input id="ville" value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Abidjan, San Pedro..." />
+            </div>
+            <div className="field">
+              <label htmlFor="link">Lien WhatsApp du groupe</label>
+              <input id="link" value={lien} onChange={(e) => setLien(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
+            </div>
 
-          <div className="field">
-            <label htmlFor="icon">Icône de la communauté</label>
-            <input id="icon" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setIconFile, setIconPreview)} />
-            {iconPreview && <img src={iconPreview} alt="Aperçu de l’icône" className="preview-image" />}
-          </div>
+            <div className="field">
+              <label htmlFor="banner">Bannière de la communauté</label>
+              <input id="banner" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setBannerFile, setBannerPreview)} />
+              {bannerPreview && <img src={bannerPreview} alt="Aperçu de la bannière" className="preview-image" />}
+            </div>
 
-          <button type="submit" className="button" disabled={loading}>
-            {loading ? 'Publication...' : 'Publier une communauté'}
-          </button>
-          {message && <p style={{ marginTop: 12 }}>{message}</p>}
-        </form>
-      </section>
+            <div className="field">
+              <label htmlFor="icon">Icône de la communauté</label>
+              <input id="icon" type="file" accept="image/*" onChange={(event) => handleFileSelection(event, setIconFile, setIconPreview)} />
+              {iconPreview && <img src={iconPreview} alt="Aperçu de l’icône" className="preview-image" />}
+            </div>
+
+            <button type="submit" className="button" disabled={loading}>
+              {loading ? 'Publication...' : 'Publier une communauté'}
+            </button>
+            {message && <p style={{ marginTop: 12 }}>{message}</p>}
+          </form>
+        </section>
+      )}
 
       <Link href="/payment" className="button secondary" style={{ marginTop: '18px' }}>
         Débloquer l’accès premium

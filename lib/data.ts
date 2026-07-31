@@ -13,7 +13,7 @@ export type Group = {
 };
 
 export const categories = [
-  'Science et Teck',
+  'Science et Tech',
   'Sport',
   'Musique',
   'Business',

@@ -7,7 +7,7 @@ import { supabaseBrowser } from '../../lib/supabase-browser';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const COMMUNITY_CATEGORIES = [
-  { label: 'Technologie', value: 'Science et Teck' },
+  { label: 'Science et Tech', value: 'Science et Tech' },
   { label: 'Sport', value: 'Sport' },
   { label: 'Musique', value: 'Musique' },
   { label: 'Business', value: 'Business' },
