@@ -10,7 +10,7 @@ export async function GET() {
 
   const body = {
     email: 'client@groupfind.ci',
-    amount: 99,
+    amount: 9900,
     currency: 'XOF',
     callback_url: PAYSTACK_RETURN_URL,
     metadata: {
