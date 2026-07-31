@@ -1,30 +1,36 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Variables publiques (disponibles côté client ET serveur)
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_PUBLIC_KEY ||
-  process.env.NEXT_SUPABASE_ANON_PUBLIC_KEY ||
-  '';
-const SUPABASE_SERVICE_ROLE =
-  process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  '';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+
+// Variables serveur (disponibles UNIQUEMENT côté serveur)
+const SUPABASE_SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
 const GROUPS_TABLE = process.env.NEXT_PUBLIC_SUPABASE_GROUPS || 'groupes';
 const USERS_TABLE = process.env.NEXT_PUBLIC_SUPABASE_USERS || 'utilisateurs';
 
+// Client public pour les opérations côté client
 export const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Client serveur pour les opérations admin (uniquement en server-side)
 export function createServerSupabase() {
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE) {
-    throw new Error('Supabase server keys are not configured');
+  if (!SUPABASE_URL) {
+    throw new Error('Supabase URL is not configured');
   }
-  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE);
+  // Utiliser ANON_KEY si SERVICE_ROLE n'est pas disponible
+  const key = SUPABASE_SERVICE_ROLE || SUPABASE_ANON_KEY;
+  return createClient(SUPABASE_URL, key);
 }
 
+// ============================================
+// FONCTIONS PUBLIQUES (utilisent le client public)
+// ============================================
+
 export async function fetchGroups({ q, category }: { q?: string; category?: string }) {
-  const supabase = createServerSupabase();
-  let query = supabase.from(GROUPS_TABLE).select('*').eq('est_actif', true);
+  // Utiliser le client public pour les lectures
+  let query = supabaseClient.from(GROUPS_TABLE).select('*').eq('est_actif', true);
+  
   if (category && category !== 'Tous') {
     query = query.eq('categorie', category);
   }
@@ -38,34 +44,58 @@ export async function fetchGroups({ q, category }: { q?: string; category?: stri
 }
 
 export async function fetchGroupById(id: string) {
-  const supabase = createServerSupabase();
-  const { data, error } = await supabase.from(GROUPS_TABLE).select('*').eq('id', id).maybeSingle();
+  const { data, error } = await supabaseClient
+    .from(GROUPS_TABLE)
+    .select('*')
+    .eq('id', id)
+    .maybeSingle();
   if (error) throw error;
   return data || null;
 }
 
 export async function fetchUserById(user_id: string) {
-  const supabase = createServerSupabase();
-  const { data, error } = await supabase.from(USERS_TABLE).select('*').eq('user_id', user_id).maybeSingle();
+  const { data, error } = await supabaseClient
+    .from(USERS_TABLE)
+    .select('*')
+    .eq('user_id', user_id)
+    .maybeSingle();
   if (error) throw error;
   return data || null;
 }
 
+// ============================================
+// FONCTIONS D'ECRITURE (utilisent le client serveur si disponible)
+// ============================================
+
 export async function insertGroup(payload: any) {
-  const supabase = createServerSupabase();
-  const { data, error } = await supabase.from(GROUPS_TABLE).insert(payload).select();
+  // Utiliser le client public (avec RLS)
+  const { data, error } = await supabaseClient.from(GROUPS_TABLE).insert(payload).select();
   if (error) throw error;
   return data;
 }
 
 export async function insertUser(payload: any) {
-  const supabase = createServerSupabase();
-  const { data, error } = await supabase.from(USERS_TABLE).insert(payload).select();
+  // Utiliser le client public (avec RLS)
+  const { data, error } = await supabaseClient.from(USERS_TABLE).insert(payload).select();
   if (error) throw error;
   return data;
 }
 
-export async function createAuthUser({ email, password, noms, numero_telephone }: { email: string; password: string; noms?: string; numero_telephone?: string }) {
+// ============================================
+// FONCTIONS SERVEUR UNIQUEMENT (ne pas appeler depuis le client)
+// ============================================
+
+export async function createAuthUser({ email, password, noms, numero_telephone }: { 
+  email: string; 
+  password: string; 
+  noms?: string; 
+  numero_telephone?: string 
+}) {
+  // Cette fonction doit être appelée UNIQUEMENT depuis une API route ou server component
+  if (typeof window !== 'undefined') {
+    throw new Error('createAuthUser cannot be called from the client');
+  }
+  
   const supabase = createServerSupabase();
   // @ts-ignore admin method
   const { data, error } = await (supabase.auth as any).admin.createUser({
