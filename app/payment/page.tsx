@@ -25,7 +25,7 @@ export default function PaymentPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: user.email,
-          amount: 99,
+          amount: 1,
          
           userId: user.id,
         }),
