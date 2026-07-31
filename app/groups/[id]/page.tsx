@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { fetchGroupById } from '../../../lib/supabase';
+import GroupAccessSection from '../../../components/GroupAccessSection';
 
 export default async function GroupPage({ params, searchParams }: { params: { id: string }; searchParams: { subscribed?: string } }) {
   const group = await fetchGroupById(params.id);
@@ -46,22 +47,8 @@ export default async function GroupPage({ params, searchParams }: { params: { id
           )}
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '24px' }}>
-            {isSubscribed ? (
-              <a href={group.lien_invitation} className="button" target="_blank" rel="noreferrer">
-                Rejoindre le groupe
-              </a>
-            ) : (
-              <Link href="/payment" className="button secondary">
-                Abonnez-vous pour rejoindre
-              </Link>
-            )}
+            <GroupAccessSection groupLink={group.lien_invitation} isSubscribedFallback={isSubscribed} />
           </div>
-
-          {!isSubscribed && (
-            <p className="page-note" style={{ marginTop: '16px' }}>
-              Seuls les membres abonnés peuvent accéder au lien WhatsApp. Abonnez-vous pour un pass de 30 jours.
-            </p>
-          )}
         </div>
       </section>
     </main>
