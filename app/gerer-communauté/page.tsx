@@ -199,7 +199,7 @@ export default function GererCommunautePage() {
           </div>
 
           <div className="field">
-            <label htmlFor="lien">Lien d’invitation</label>
+            <label htmlFor="lien">Lien WhatsApp du groupe</label>
             <input id="lien" value={lien} onChange={(e) => setLien(e.target.value)} />
           </div>
 

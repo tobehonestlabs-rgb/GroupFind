@@ -169,7 +169,7 @@ export default function AccountPage() {
             <input id="ville" value={ville} onChange={(e) => setVille(e.target.value)} placeholder="Abidjan, San Pedro..." />
           </div>
           <div className="field">
-            <label htmlFor="link">Lien d’invitation</label>
+            <label htmlFor="link">Lien WhatsApp du groupe</label>
             <input id="link" value={lien} onChange={(e) => setLien(e.target.value)} placeholder="https://chat.whatsapp.com/..." />
           </div>
 
