@@ -109,7 +109,7 @@ export default function AccountPage() {
       </section>
 
       <Link href="/payment" className="button" style={{ marginTop: '18px' }}>
-        Souscrire au pass 30 jours
+        Paye ta première fois
       </Link>
     </main>
   );
