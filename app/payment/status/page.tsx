@@ -19,7 +19,7 @@ export default function PaymentStatusPage() {
 
     async function verify() {
       try {
-        const encodedReference = encodeURIComponent(reference);
+        const encodedReference = encodeURIComponent(reference as string);
         const res = await fetch(`/api/paystack?reference=${encodedReference}`);
         const data = await res.json();
 
