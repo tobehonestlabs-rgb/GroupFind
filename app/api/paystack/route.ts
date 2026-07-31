@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerSupabase } from '../../../lib/supabase';
 
 const PAYSTACK_SECRET_KEY = process.env.PAYSTACK_SECRET_KEY || '';
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const APP_URL = process.env.PAYSTACK_RETURN_URL || 'http://localhost:3000';
 
 export async function POST(request: NextRequest) {
   if (!PAYSTACK_SECRET_KEY) {
