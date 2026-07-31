@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.json();
-  const { email, amount, plan, groupeId, userId } = body;
+  const { email, amount, groupeId, userId } = body;
 
   if (!email || !amount || !userId) {
     return NextResponse.json(
@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
     email,
     amount: Number(amount) * 100,
     currency: 'XOF',
-    plan: plan || 'premium',
+    
     metadata: {
-      plan,
+      
       groupeId,
       userId,
     },
@@ -119,7 +119,7 @@ export async function GET(request: NextRequest) {
       reference: transaction.reference,
       amount: transaction.amount / 100,
       status: transaction.status,
-      plan: transaction.metadata?.plan || 'premium',
+     
       userId,
       groupeId: transaction.metadata?.groupeId,
       paid_at: transaction.paid_at,

@@ -26,7 +26,7 @@ export default function PaymentPage() {
         body: JSON.stringify({
           email: user.email,
           amount: 99,
-          plan: 'premium',
+         
           userId: user.id,
         }),
       });

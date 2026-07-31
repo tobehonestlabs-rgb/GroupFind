@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 
 async function verifyPayment(reference: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/api/paystack?reference=${encodeURIComponent(reference)}`);
+  const res = await fetch(`${process.env.PAYSTACK_RETURN_URL ?? 'http://localhost:3000'}/api/paystack?reference=${encodeURIComponent(reference)}`);
   if (!res.ok) {
     const errorData = await res.json().catch(() => null);
     return { status: 'error', message: errorData?.error || 'Erreur de vérification du paiement.' };
