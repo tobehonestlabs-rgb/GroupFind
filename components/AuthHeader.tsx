@@ -10,12 +10,10 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    // Récupérer la session
     supabaseClient.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
     });
 
-    // Écouter les changements d'auth
     const { data: { subscription } } = supabaseClient.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
     });
@@ -33,7 +31,6 @@ export default function Header() {
     <header className="header">
       <div className="container header__inner">
         <Link href="/" className="header__logo">
-          <span className="header__logo-icon">📱</span>
           <span className="header__logo-text">GroupFind<span className="header__logo-dot">.</span>ci</span>
         </Link>
 
@@ -80,8 +77,8 @@ export default function Header() {
             </>
           ) : (
             <>
-              <Link href="/signup" className="header__nav-link" onClick={() => setMenuOpen(false)}>Connexion</Link>
-              <Link href="/signin" className="button header__nav-btn" onClick={() => setMenuOpen(false)}>S'inscrire</Link>
+              <Link href="/signin" className="header__nav-link" onClick={() => setMenuOpen(false)}>Connexion</Link>
+              <Link href="/signup" className="button header__nav-btn" onClick={() => setMenuOpen(false)}>S'inscrire</Link>
             </>
           )}
         </nav>
