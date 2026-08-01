@@ -92,7 +92,7 @@ export default function Header() {
         )}
       </header>
 
-      {/* Header Desktop */}
+      {/* Header Desktop - TRANSPARENT comme Discord */}
       <header className="header-desktop">
         <nav className="header-desktop__nav">
           <div className="header-desktop__logo">
@@ -119,7 +119,7 @@ export default function Header() {
       </header>
 
       <style jsx>{`
-        /* ===== HEADER MOBILE ===== */
+        /* ===== HEADER MOBILE (avec fond) ===== */
         .header-mobile {
           display: none;
           background: #1e1f22;
@@ -247,11 +247,10 @@ export default function Header() {
           background: #008f5a;
         }
 
-        /* ===== HEADER DESKTOP ===== */
+        /* ===== HEADER DESKTOP - TRANSPARENT ===== */
         .header-desktop {
           display: flex;
-          background: #1e1f22;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          background: transparent;
           padding: 0 24px;
           height: 64px;
           position: sticky;
@@ -259,6 +258,14 @@ export default function Header() {
           z-index: 1000;
           align-items: center;
           width: 100%;
+          transition: background 0.3s ease;
+        }
+
+        /* Effet de fond au scroll */
+        .header-desktop.scrolled {
+          background: #1e1f22;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          backdrop-filter: blur(10px);
         }
 
         .header-desktop__nav {
@@ -279,6 +286,7 @@ export default function Header() {
           font-weight: 700;
           color: #ffffff;
           letter-spacing: -0.5px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .header-desktop__logo-dot {
@@ -296,7 +304,7 @@ export default function Header() {
 
         .header-desktop__link {
           padding: 8px 16px;
-          color: #b5bac1;
+          color: rgba(255, 255, 255, 0.85);
           text-decoration: none;
           font-size: 0.9rem;
           font-weight: 500;
@@ -305,19 +313,20 @@ export default function Header() {
           background: none;
           border: none;
           cursor: pointer;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
         .header-desktop__link:hover {
           color: #ffffff;
-          background: rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.08);
         }
 
         .header-desktop__link--logout {
-          color: #dc2626;
+          color: rgba(220, 38, 38, 0.85);
         }
 
         .header-desktop__link--logout:hover {
-          color: #ef4444;
+          color: #dc2626;
           background: rgba(220, 38, 38, 0.1);
         }
 
@@ -330,11 +339,13 @@ export default function Header() {
           font-size: 0.85rem;
           font-weight: 500;
           transition: all 0.2s ease;
+          box-shadow: 0 2px 8px rgba(0, 168, 107, 0.3);
         }
 
         .header-desktop__btn:hover {
           background: #008f5a;
           transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 168, 107, 0.4);
         }
 
         /* ===== RESPONSIVE ===== */
