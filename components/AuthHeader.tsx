@@ -95,19 +95,27 @@ export default function Header() {
       {/* Header Desktop - TRANSPARENT comme Discord */}
       <header className="header-desktop">
         <nav className="header-desktop__nav">
-          <div className="header-desktop__logo">
-            <Link href="/" aria-label="Accueil">
-              <span className="header-desktop__logo-text">GroupFind<span className="header-desktop__logo-dot">.</span>ci</span>
-            </Link>
-          </div>
-          <ul className="header-desktop__links">
+          {/* Logo supprimé */}
+          <ul className="header-desktop__links header-desktop__links--left">
+            {user && (
+              <li>
+                <button onClick={handleLogout} className="header-desktop__link header-desktop__link--logout">
+                  Déconnexion
+                </button>
+              </li>
+            )}
+          </ul>
+
+          {/* Liens centrés */}
+          <ul className="header-desktop__links header-desktop__links--center">
             <li><Link href="/search" className="header-desktop__link">Rechercher</Link></li>
             <li><Link href="/gerer-communauté" className="header-desktop__link">Ajouter un groupe</Link></li>
+          </ul>
+
+          {/* Actions à droite */}
+          <ul className="header-desktop__links header-desktop__links--right">
             {user ? (
-              <>
-                <li><Link href="/account" className="header-desktop__link">Mon compte</Link></li>
-                <li><button onClick={handleLogout} className="header-desktop__link header-desktop__link--logout">Déconnexion</button></li>
-              </>
+              <li><Link href="/account" className="header-desktop__link">Mon compte</Link></li>
             ) : (
               <>
                 <li><Link href="/signin" className="header-desktop__link">Connexion</Link></li>
@@ -119,7 +127,7 @@ export default function Header() {
       </header>
 
       <style jsx>{`
-        /* ===== HEADER MOBILE (avec fond) ===== */
+        /* ===== HEADER MOBILE ===== */
         .header-mobile {
           display: none;
           background: #1e1f22;
@@ -166,7 +174,7 @@ export default function Header() {
           color: #b5bac1;
           text-decoration: none;
           font-size: 0.85rem;
-          font-weight: 500;
+          font-weight: 600;
           background: none;
           border: none;
           cursor: pointer;
@@ -210,6 +218,7 @@ export default function Header() {
           color: #b5bac1;
           text-decoration: none;
           font-size: 1rem;
+          font-weight: 600;
           border-radius: 4px;
           background: none;
           border: none;
@@ -238,7 +247,7 @@ export default function Header() {
           text-decoration: none;
           border-radius: 4px;
           font-size: 1rem;
-          font-weight: 500;
+          font-weight: 600;
           text-align: center;
           margin-top: 4px;
         }
@@ -261,13 +270,6 @@ export default function Header() {
           transition: background 0.3s ease;
         }
 
-        /* Effet de fond au scroll */
-        .header-desktop.scrolled {
-          background: #1e1f22;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-          backdrop-filter: blur(10px);
-        }
-
         .header-desktop__nav {
           max-width: 1200px;
           width: 100%;
@@ -275,39 +277,51 @@ export default function Header() {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          position: relative;
         }
 
-        .header-desktop__logo a {
-          text-decoration: none;
-        }
-
-        .header-desktop__logo-text {
-          font-size: 1.3rem;
-          font-weight: 700;
-          color: #ffffff;
-          letter-spacing: -0.5px;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .header-desktop__logo-dot {
-          color: #00a86b;
-        }
-
-        .header-desktop__links {
+        /* ===== GAUCHE ===== */
+        .header-desktop__links--left {
           display: flex;
           align-items: center;
           gap: 4px;
           list-style: none;
           margin: 0;
           padding: 0;
+          min-width: 120px;
+        }
+
+        /* ===== CENTRE ===== */
+        .header-desktop__links--center {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        /* ===== DROITE ===== */
+        .header-desktop__links--right {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          min-width: 120px;
+          justify-content: flex-end;
         }
 
         .header-desktop__link {
           padding: 8px 16px;
           color: rgba(255, 255, 255, 0.85);
           text-decoration: none;
-          font-size: 0.9rem;
-          font-weight: 500;
+          font-size: 0.95rem;
+          font-weight: 600;
           border-radius: 4px;
           transition: all 0.2s ease;
           background: none;
@@ -336,8 +350,8 @@ export default function Header() {
           color: #ffffff;
           text-decoration: none;
           border-radius: 4px;
-          font-size: 0.85rem;
-          font-weight: 500;
+          font-size: 0.9rem;
+          font-weight: 600;
           transition: all 0.2s ease;
           box-shadow: 0 2px 8px rgba(0, 168, 107, 0.3);
         }
