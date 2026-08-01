@@ -49,7 +49,7 @@ export default function Header() {
           <div className="header-mobile__logo">
             <Link href="/" aria-label="Accueil">
               <Image 
-                src="/logo.svg" 
+                src="/public/logo.svg" 
                 alt="GroupFind.ci" 
                 width={128} 
                 height={80}
