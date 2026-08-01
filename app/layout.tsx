@@ -1,7 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from 'next';
 import './globals.css';
-import Header from '../components/AuthHeader.tsx';
+import Header from '../components/AuthHeader';
 
 export const metadata: Metadata = {
   title: 'GroupFind.ci',
