@@ -49,7 +49,7 @@ export default function Header() {
           <div className="header-mobile__logo">
             <Link href="/" aria-label="Accueil">
               <Image 
-                src="/public/logo.svg" 
+                src="/logo.svg" 
                 alt="GroupFind.ci" 
                 width={128} 
                 height={80}
@@ -119,7 +119,7 @@ export default function Header() {
           <div className="header-desktop__left">
             <Link href="/" className="header-desktop__logo" aria-label="Accueil">
               <Image 
-                src="/public/logo.svg" 
+                src="/logo.svg" 
                 alt="GroupFind.ci" 
                 width={136} 
                 height={88}
