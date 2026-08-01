@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Variables publiques (disponibles côté client ET serveur)
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = process.env.NEXT_SUPABASE_ANON_PUBLIC_KEY || '';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
 // Variables serveur (disponibles UNIQUEMENT côté serveur)
 const SUPABASE_SERVICE_ROLE = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY || '';
