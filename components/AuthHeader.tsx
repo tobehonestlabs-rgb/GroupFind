@@ -401,7 +401,7 @@ export default function Header() {
                   </linearGradient>
                 </defs>
               </svg>
-              <span className="header-desktop__logo-text">GroupFind<span className="header-desktop__logo-dot">.</span>ci</span>
+             
             </Link>
           </div>
 
