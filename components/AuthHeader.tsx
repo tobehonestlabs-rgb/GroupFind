@@ -119,20 +119,6 @@ export default function Header() {
       </header>
 
       <style jsx>{`
-        /* ===== STYLES COMMUNS ===== */
-        .header-mobile__logo-text,
-        .header-desktop__logo-text {
-          font-size: 1.3rem;
-          font-weight: 700;
-          color: #ffffff;
-          letter-spacing: -0.5px;
-        }
-
-        .header-mobile__logo-dot,
-        .header-desktop__logo-dot {
-          color: #00a86b;
-        }
-
         /* ===== HEADER MOBILE ===== */
         .header-mobile {
           display: none;
@@ -143,6 +129,7 @@ export default function Header() {
           position: sticky;
           top: 0;
           z-index: 1000;
+          width: 100%;
         }
 
         .header-mobile__nav {
@@ -150,10 +137,23 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           height: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
         }
 
         .header-mobile__logo a {
           text-decoration: none;
+        }
+
+        .header-mobile__logo-text {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #ffffff;
+          letter-spacing: -0.5px;
+        }
+
+        .header-mobile__logo-dot {
+          color: #00a86b;
         }
 
         .header-mobile__actions {
@@ -165,7 +165,7 @@ export default function Header() {
         .header-mobile__login {
           color: #b5bac1;
           text-decoration: none;
-          font-size: 0.9rem;
+          font-size: 0.85rem;
           font-weight: 500;
           background: none;
           border: none;
@@ -189,11 +189,6 @@ export default function Header() {
 
         .header-mobile__menu:hover {
           color: #ffffff;
-        }
-
-        .header-mobile__menu svg {
-          width: 24px;
-          height: 24px;
         }
 
         .header-mobile__dropdown {
@@ -263,6 +258,7 @@ export default function Header() {
           top: 0;
           z-index: 1000;
           align-items: center;
+          width: 100%;
         }
 
         .header-desktop__nav {
@@ -276,6 +272,17 @@ export default function Header() {
 
         .header-desktop__logo a {
           text-decoration: none;
+        }
+
+        .header-desktop__logo-text {
+          font-size: 1.3rem;
+          font-weight: 700;
+          color: #ffffff;
+          letter-spacing: -0.5px;
+        }
+
+        .header-desktop__logo-dot {
+          color: #00a86b;
         }
 
         .header-desktop__links {
@@ -333,11 +340,11 @@ export default function Header() {
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
           .header-desktop {
-            display: none;
+            display: none !important;
           }
 
           .header-mobile {
-            display: block;
+            display: block !important;
           }
         }
 
