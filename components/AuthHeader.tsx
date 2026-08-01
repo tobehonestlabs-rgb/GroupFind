@@ -192,7 +192,7 @@ export default function Header() {
                   </linearGradient>
                 </defs>
               </svg>
-              <span className="header-mobile__logo-text">GroupFind<span className="header-mobile__logo-dot">.</span>ci</span>
+             
             </Link>
           </div>
           <div className="header-mobile__actions">
