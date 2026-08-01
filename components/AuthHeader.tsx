@@ -40,18 +40,18 @@ export default function Header() {
         {/* Navigation Desktop */}
         <nav className="header__nav desktop-nav">
           <Link href="/search" className="header__nav-link">Rechercher</Link>
-          <Link href="/ajouter-un-groupe" className="header__nav-link">Ajouter un groupe</Link>
+          <Link href="/gerer-communauté" className="header__nav-link">Ajouter un groupe</Link>
           {user ? (
             <>
-              <Link href="/compte" className="header__nav-link">Mon compte</Link>
+              <Link href="/account" className="header__nav-link">Mon compte</Link>
               <button onClick={handleLogout} className="header__nav-link header__nav-link--logout">
                 Déconnexion
               </button>
             </>
           ) : (
             <>
-              <Link href="/connexion" className="header__nav-link">Connexion</Link>
-              <Link href="/inscription" className="button header__nav-btn">S'inscrire</Link>
+              <Link href="/signin" className="header__nav-link">Connexion</Link>
+              <Link href="/signup" className="button header__nav-btn">S'inscrire</Link>
             </>
           )}
         </nav>
@@ -70,18 +70,18 @@ export default function Header() {
         {/* Navigation Mobile */}
         <nav className={`header__nav mobile-nav ${menuOpen ? 'is-open' : ''}`}>
           <Link href="/search" className="header__nav-link" onClick={() => setMenuOpen(false)}>Rechercher</Link>
-          <Link href="/ajouter-un-groupe" className="header__nav-link" onClick={() => setMenuOpen(false)}>Ajouter un groupe</Link>
+          <Link href="/gerer-communauté" className="header__nav-link" onClick={() => setMenuOpen(false)}>Ajouter un groupe</Link>
           {user ? (
             <>
-              <Link href="/compte" className="header__nav-link" onClick={() => setMenuOpen(false)}>Mon compte</Link>
+              <Link href="/account" className="header__nav-link" onClick={() => setMenuOpen(false)}>Mon compte</Link>
               <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="header__nav-link header__nav-link--logout">
                 Déconnexion
               </button>
             </>
           ) : (
             <>
-              <Link href="/connexion" className="header__nav-link" onClick={() => setMenuOpen(false)}>Connexion</Link>
-              <Link href="/inscription" className="button header__nav-btn" onClick={() => setMenuOpen(false)}>S'inscrire</Link>
+              <Link href="/signup" className="header__nav-link" onClick={() => setMenuOpen(false)}>Connexion</Link>
+              <Link href="/signin" className="button header__nav-btn" onClick={() => setMenuOpen(false)}>S'inscrire</Link>
             </>
           )}
         </nav>
