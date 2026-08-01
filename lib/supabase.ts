@@ -42,7 +42,25 @@ export async function fetchGroups({ q, category }: { q?: string; category?: stri
   if (error) throw error;
   return data || [];
 }
+// lib/supabase.ts
+export async function fetchCategories(): Promise<string[]> {
+  try {
+    const { data, error } = await supabaseClient
+      .from('groupes')
+      .select('categorie')
+      .eq('est_actif', true)
+      .not('categorie', 'is', null);
 
+    if (error) throw error;
+    
+    // Extraire les catégories uniques
+    const uniqueCategories = [...new Set(data.map((item: any) => item.categorie))];
+    return uniqueCategories;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+}
 export async function fetchGroupById(id: string) {
   const { data, error } = await supabaseClient
     .from(GROUPS_TABLE)

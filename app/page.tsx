@@ -1,6 +1,7 @@
+// app/page.tsx
 import Link from 'next/link';
-import { categories, getGroupMedia } from '../lib/data';
-import { fetchGroups } from '../lib/supabase';
+import { getGroupMedia } from '../lib/data';
+import { fetchGroups, fetchCategories } from '../lib/supabase';
 
 const PAGE_SIZE = 5;
 
@@ -16,6 +17,11 @@ export default async function HomePage({ searchParams }: { searchParams?: { page
   const currentPage = Number(searchParams?.page || '1');
   const q = searchParams?.q?.trim() || '';
   const category = searchParams?.category || '';
+  
+  // Récupérer les catégories depuis Supabase
+  const categories = await fetchCategories();
+  
+  // Récupérer les groupes (réels)
   const results = await fetchGroups({ q, category: category || undefined });
   const totalPages = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
   const safePage = Math.min(currentPage, totalPages);
@@ -26,7 +32,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { page
     <main>
       <section className="section hero-shell">
         <div className="hero-copy">
-          <span className="eyebrow">Groupes WhatsApp • Côte d’Ivoire</span>
+          <span className="eyebrow">Groupes WhatsApp • Côte d'Ivoire</span>
           <h1 className="section-title hero-title">Trouvez la bonne communauté en quelques secondes.</h1>
           <p className="page-note">
             Explorez des groupes actifs par thème, ville et intérêt, puis rejoignez les conversations qui vous ressemblent.
@@ -50,7 +56,7 @@ export default async function HomePage({ searchParams }: { searchParams?: { page
             <Link href="/search?category=Tous" className={`badge ${!category || category === 'Tous' ? 'active' : ''}`}>
               Tous
             </Link>
-            {categories.map((cat) => (
+            {categories.map((cat: string) => (
               <Link key={cat} href={`/search?category=${encodeURIComponent(cat)}`} className={`badge ${category === cat ? 'active' : ''}`}>
                 {cat}
               </Link>
@@ -74,48 +80,65 @@ export default async function HomePage({ searchParams }: { searchParams?: { page
         </div>
 
         <div className="card-grid">
-          {featured.map((group: any) => {
-            const { banner, icon } = getGroupMedia(group);
-            const description = group.description?.length > 120 ? `${group.description.slice(0, 120)}...` : group.description;
-            const safeBanner = banner || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80';
-            return (
-              <article key={group.id} className="group-card">
-                <div className="group-card__media" style={{ backgroundImage: `url(${safeBanner})` }} />
-                <div className="group-card__body">
-                  <div className="group-card__top">
-                    <div className="group-card__avatar">
-                      {icon ? <img src={icon} alt={group.nom} className="group-card__icon" /> : (group.nom || 'GF').slice(0, 1).toUpperCase()}
+          {featured.length > 0 ? (
+            featured.map((group: any) => {
+              const { banner, icon } = getGroupMedia(group);
+              const description = group.description?.length > 120 ? `${group.description.slice(0, 120)}...` : group.description;
+              const safeBanner = banner || 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80';
+              return (
+                <article key={group.id} className="group-card">
+                  <div className="group-card__media" style={{ backgroundImage: `url(${safeBanner})` }} />
+                  <div className="group-card__body">
+                    <div className="group-card__top">
+                      <div className="group-card__avatar">
+                        {icon ? <img src={icon} alt={group.nom} className="group-card__icon" /> : (group.nom || 'GF').slice(0, 1).toUpperCase()}
+                      </div>
+                      <div>
+                        <h3>{group.nom}</h3>
+                        <p className="group-card__meta">{group.categorie} • {group.ville}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3>{group.nom}</h3>
-                      <p className="group-card__meta">{group.categorie} • {group.ville}</p>
+                    <p>{description}</p>
+                    <div className="card-meta">
+                      <span>{group.ville}</span>
                     </div>
+                    <Link href={`/groups/${group.id}`} className="button secondary">
+                      Voir le groupe
+                    </Link>
                   </div>
-                  <p>{description}</p>
-                  <div className="card-meta">
-                    <span>{group.ville}</span>
-                  </div>
-                  <Link href={`/groups/${group.id}`} className="button secondary">
-                    Voir le groupe
-                  </Link>
-                </div>
-              </article>
-            );
-          })}
+                </article>
+              );
+            })
+          ) : (
+            <p className="page-note">Aucun groupe trouvé</p>
+          )}
         </div>
 
         {results.length > PAGE_SIZE && (
           <div className="pagination">
-            <Link href={buildPageUrl(Math.max(1, safePage - 1), q, category)} className={`pagination__link ${safePage === 1 ? 'is-disabled' : ''}`}>
+            <Link 
+              href={buildPageUrl(Math.max(1, safePage - 1), q, category)} 
+              className={`pagination__link ${safePage === 1 ? 'is-disabled' : ''}`}
+            >
               Précédent
             </Link>
             <span className="pagination__status">Page {safePage} / {totalPages}</span>
-            <Link href={buildPageUrl(Math.min(totalPages, safePage + 1), q, category)} className={`pagination__link ${safePage === totalPages ? 'is-disabled' : ''}`}>
+            <Link 
+              href={buildPageUrl(Math.min(totalPages, safePage + 1), q, category)} 
+              className={`pagination__link ${safePage === totalPages ? 'is-disabled' : ''}`}
+            >
               Suivant
             </Link>
           </div>
         )}
       </section>
+      
+      {/* ✅ FOOTER SIMPLE */}
+      <footer className="footer">
+        <div className="container">
+          <span className="footer__brand">GROUPFIND</span>
+        </div>
+      </footer>
     </main>
   );
 }
