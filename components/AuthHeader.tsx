@@ -51,8 +51,8 @@ export default function Header() {
               <Image 
                 src="/logo.svg" 
                 alt="GroupFind.ci" 
-                width={128} 
-                height={80}
+                width={60} 
+                height={60}
                 className="header-mobile__logo-icon"
               />
             </Link>
@@ -121,18 +121,24 @@ export default function Header() {
               <Image 
                 src="/logo.svg" 
                 alt="GroupFind.ci" 
-                width={136} 
-                height={88}
+                width={80} 
+                height={80}
                 className="header-desktop__logo-icon"
                 priority
               />
             </Link>
           </div>
 
-          {/* Liens - Centre */}
+          {/* Liens - Centre avec effet Discord */}
           <nav className="header-desktop__center">
-            <Link href="/search" className="header-desktop__link">Rechercher</Link>
-            <Link href="/gerer-communauté" className="header-desktop__link">Ajouter un groupe</Link>
+            <Link href="/search" className="header-desktop__link">
+              <span className="header-desktop__link-text">Rechercher</span>
+              <span className="header-desktop__link-hover"></span>
+            </Link>
+            <Link href="/gerer-communauté" className="header-desktop__link">
+              <span className="header-desktop__link-text">Ajouter un groupe</span>
+              <span className="header-desktop__link-hover"></span>
+            </Link>
           </nav>
 
           {/* Auth - Droite */}
@@ -205,9 +211,10 @@ export default function Header() {
         }
 
         .header-mobile__logo-icon {
-          width: 32px;
-          height: 32px;
+          width: 60px;
+          height: 60px;
           flex-shrink: 0;
+          object-fit: contain;
         }
 
         .header-mobile__actions {
@@ -288,7 +295,7 @@ export default function Header() {
 
         .header-mobile__dropdown-btn {
           padding: 10px 12px;
-          background: #00a86b;
+          background: #f97316;
           color: #ffffff;
           text-decoration: none;
           border-radius: 4px;
@@ -299,7 +306,7 @@ export default function Header() {
         }
 
         .header-mobile__dropdown-btn:hover {
-          background: #008f5a;
+          background: #ea580c;
         }
 
         /* ===== HEADER DESKTOP ===== */
@@ -307,7 +314,7 @@ export default function Header() {
           display: flex;
           background: transparent;
           padding: 0 24px;
-          height: 72px;
+          height: 80px;
           position: sticky;
           top: 0;
           z-index: 1000;
@@ -329,7 +336,7 @@ export default function Header() {
         .header-desktop__left {
           display: flex;
           align-items: center;
-          min-width: 60px;
+          min-width: 80px;
         }
 
         .header-desktop__logo {
@@ -339,38 +346,66 @@ export default function Header() {
         }
 
         .header-desktop__logo-icon {
-          width: 40px;
-          height: 40px;
+          width: 80px;
+          height: 80px;
           flex-shrink: 0;
+          object-fit: contain;
         }
 
-        /* ===== CENTRE ===== */
+        /* ===== CENTRE - Liens Discord-like ===== */
         .header-desktop__center {
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 8px;
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
         }
 
         .header-desktop__link {
-          padding: 8px 16px;
-          color: rgba(255, 255, 255, 0.85);
+          position: relative;
+          padding: 8px 20px;
+          color: rgba(255, 255, 255, 0.7);
           text-decoration: none;
-          font-size: 0.95rem;
+          font-size: 1rem;
           font-weight: 600;
-          border-radius: 4px;
+          border-radius: 8px;
           transition: all 0.2s ease;
-          background: none;
+          background: transparent;
           border: none;
           cursor: pointer;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+        }
+
+        .header-desktop__link-text {
+          position: relative;
+          z-index: 2;
+        }
+
+        .header-desktop__link-hover {
+          position: absolute;
+          inset: 0;
+          background: rgba(255, 255, 255, 0.08);
+          border-radius: 8px;
+          transform: scale(0.8);
+          opacity: 0;
+          transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+          z-index: 1;
         }
 
         .header-desktop__link:hover {
           color: #ffffff;
-          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .header-desktop__link:hover .header-desktop__link-hover {
+          transform: scale(1);
+          opacity: 1;
+        }
+
+        .header-desktop__link:active .header-desktop__link-hover {
+          background: rgba(255, 255, 255, 0.15);
+          transform: scale(0.95);
         }
 
         /* ===== DROITE ===== */
@@ -404,7 +439,7 @@ export default function Header() {
           width: 28px;
           height: 28px;
           border-radius: 50%;
-          background: #00a86b;
+          background: #f97316;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -429,20 +464,24 @@ export default function Header() {
 
         .header-desktop__btn {
           padding: 8px 20px;
-          background: #00a86b;
+          background: #f97316;
           color: #ffffff;
           text-decoration: none;
-          border-radius: 4px;
+          border-radius: 6px;
           font-size: 0.9rem;
           font-weight: 600;
           transition: all 0.2s ease;
-          box-shadow: 0 2px 8px rgba(0, 168, 107, 0.3);
+          box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
         }
 
         .header-desktop__btn:hover {
-          background: #008f5a;
+          background: #ea580c;
           transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0, 168, 107, 0.4);
+          box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        }
+
+        .header-desktop__btn:active {
+          transform: scale(0.95);
         }
 
         /* ===== AUTH DROPDOWN ===== */
