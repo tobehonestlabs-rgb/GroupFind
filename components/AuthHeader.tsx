@@ -129,15 +129,13 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Liens - Centre avec effet Discord */}
+          {/* Liens - Centre */}
           <nav className="header-desktop__center">
             <Link href="/search" className="header-desktop__link">
-              <span className="header-desktop__link-text">Rechercher</span>
-              <span className="header-desktop__link-hover"></span>
+              Rechercher
             </Link>
             <Link href="/gerer-communauté" className="header-desktop__link">
-              <span className="header-desktop__link-text">Ajouter un groupe</span>
-              <span className="header-desktop__link-hover"></span>
+              Ajouter un groupe
             </Link>
           </nav>
 
@@ -352,7 +350,7 @@ export default function Header() {
           object-fit: contain;
         }
 
-        /* ===== CENTRE - Liens Discord-like ===== */
+        /* ===== CENTRE - Liens avec effets visibles ===== */
         .header-desktop__center {
           display: flex;
           align-items: center;
@@ -364,7 +362,7 @@ export default function Header() {
 
         .header-desktop__link {
           position: relative;
-          padding: 8px 20px;
+          padding: 10px 24px;
           color: rgba(255, 255, 255, 0.7);
           text-decoration: none;
           font-size: 1rem;
@@ -375,37 +373,44 @@ export default function Header() {
           border: none;
           cursor: pointer;
           text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-          overflow: hidden;
         }
 
-        .header-desktop__link-text {
-          position: relative;
-          z-index: 2;
-        }
-
-        .header-desktop__link-hover {
+        /* Effet de survol - fond orange */
+        .header-desktop__link::before {
+          content: '';
           position: absolute;
           inset: 0;
-          background: rgba(255, 255, 255, 0.08);
+          background: rgba(249, 115, 22, 0.15);
           border-radius: 8px;
-          transform: scale(0.8);
+          transform: scale(0.9);
           opacity: 0;
           transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
-          z-index: 1;
+          z-index: 0;
         }
 
         .header-desktop__link:hover {
           color: #ffffff;
         }
 
-        .header-desktop__link:hover .header-desktop__link-hover {
+        .header-desktop__link:hover::before {
           transform: scale(1);
           opacity: 1;
         }
 
-        .header-desktop__link:active .header-desktop__link-hover {
-          background: rgba(255, 255, 255, 0.15);
+        /* Effet de clic */
+        .header-desktop__link:active::before {
+          background: rgba(249, 115, 22, 0.3);
           transform: scale(0.95);
+        }
+
+        .header-desktop__link:active {
+          transform: scale(0.96);
+        }
+
+        /* Texte au-dessus de l'effet */
+        .header-desktop__link span {
+          position: relative;
+          z-index: 1;
         }
 
         /* ===== DROITE ===== */
@@ -433,6 +438,10 @@ export default function Header() {
 
         .header-desktop__auth-btn:hover {
           background: rgba(255, 255, 255, 0.1);
+        }
+
+        .header-desktop__auth-btn:active {
+          transform: scale(0.96);
         }
 
         .header-desktop__auth-avatar {
@@ -518,6 +527,10 @@ export default function Header() {
         .header-desktop__auth-dropdown-link:hover {
           color: #ffffff;
           background: rgba(255, 255, 255, 0.06);
+        }
+
+        .header-desktop__auth-dropdown-link:active {
+          transform: scale(0.98);
         }
 
         .header-desktop__auth-dropdown-link--logout {
