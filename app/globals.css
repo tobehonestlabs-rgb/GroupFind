@@ -803,3 +803,117 @@ button {
     font-size: 0.8rem;
   }
 }
+
+/* ===== COULEURS ORANGE ===== */
+:root {
+  --orange-primary: #f97316;
+  --orange-dark: #ea580c;
+  --orange-light: #fb923c;
+  --orange-hover: #fdba74;
+  --orange-gradient: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+/* ===== BOUTONS ORANGE ===== */
+.button {
+  background: var(--orange-primary);
+  color: #ffffff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+.button:hover {
+  background: var(--orange-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.4);
+}
+
+.button:active {
+  transform: scale(0.96);
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--orange-primary);
+  border: 2px solid var(--orange-primary);
+  box-shadow: none;
+}
+
+.button.secondary:hover {
+  background: var(--orange-primary);
+  color: #ffffff;
+}
+
+/* ===== BADGES/CATÉGORIES ORANGE ===== */
+.badge {
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--orange-primary);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+}
+
+.badge:hover {
+  background: var(--orange-primary);
+  color: #ffffff;
+}
+
+.badge.active {
+  background: var(--orange-primary);
+  color: #ffffff;
+}
+
+/* ===== INPUTS ORANGE ===== */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--orange-primary) !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2) !important;
+}
+
+/* ===== LIENS ORANGE ===== */
+a {
+  color: var(--orange-primary);
+}
+
+a:hover {
+  color: var(--orange-dark);
+}
+
+/* ===== HEADER ORANGE ===== */
+.header-desktop__link.active {
+  color: #ffffff;
+}
+
+.header-desktop__link.active .header-desktop__link-hover {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* ===== PAGINATION ORANGE ===== */
+.pagination__link:hover:not(.is-disabled) {
+  background: var(--orange-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  background: #0b1a1e;
+  border-top: 1px solid rgba(249, 115, 22, 0.1);
+}
+
+.footer__brand {
+  color: rgba(249, 115, 22, 0.06);
+}
